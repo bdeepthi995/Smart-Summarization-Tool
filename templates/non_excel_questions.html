@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customization Questions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h3>Customize your Summary</h3>
+        <form action="/summarize" method="POST">
+            <input type="hidden" name="input_type" value="{{ input_type }}">
+            
+            {% for file in file_contents %}
+            <input type="hidden" name="contents[{{ loop.index0 }}][content]" value="{{ file.content }}">
+            <input type="hidden" name="contents[{{ loop.index0 }}][filename]" value="{{ file.filename if file.filename else '' }}">
+            {% endfor %}
+            
+            <label>Select summary length:</label>
+            <select name="summary_length">
+                <option value="short">Short</option>
+                <option value="medium" selected>Medium</option>
+                <option value="long">Long</option>
+                <option value="very long">Very Long</option>
+            </select>
+            <br><br>
+            
+            <label>Do you want to translate the summary?</label>
+            <select name="translate" id="translate">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+            <br><br>
+            
+            <label>If yes, enter target language:</label>
+            <input type="text" name="target_language" id="target_language" disabled>
+            <br><br>
+
+            <label>Do you want to download the summary?</label>
+            <select name="download_option">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+            <br><br>
+
+            <button type="submit">Generate Summary</button>
+            <a href="javascript:history.back()" class="back-btn">← Go Back</a>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('translate').addEventListener('change', function() {
+            document.getElementById('target_language').disabled = this.value !== 'yes';
+        });
+    </script>
+</body>
+</html>

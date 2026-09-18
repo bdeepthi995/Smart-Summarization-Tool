@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Summary</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h3 class="page-title">Dataset Summary</h3>
+
+        <div class="summary-box">
+            <p class="summary-text">{{ summary }}</p>
+        </div>
+
+        <form action="/classify" method="POST" class="form-section">
+            <input type="hidden" name="file_name" value="{{ file_name }}">
+            <input type="hidden" name="file_path" value="{{ file_path }}">
+            <button type="submit" class="download-btn">➡ Classify for Further Analysis</button>
+        </form>
+
+        <div class="back-container">
+            <a href="/" class="back-btn">← Go Back</a>
+        </div>
+    </div>
+</body>
+</html>

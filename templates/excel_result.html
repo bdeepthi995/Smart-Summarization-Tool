@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Analysis Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Complaint Analysis Results</h1>
+        
+        <div class="alert alert-success">{{ message }}</div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Complaints per Department</h3>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for dept, count in dept_counts.items() %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ dept }}: {{ count }} complaints
+                            <a href="{{ url_for('download_department', department=dept) }}" class="btn btn-sm btn-outline-primary">Download</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Visualizations</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>Complaints per Department</h5>
+                    <img src="{{ url_for('static_file', filename='complaints_per_department.png') }}" alt="Complaints per Department" class="img-fluid">
+                </div>
+                {% if complaints_over_time_exists %}
+                <div class="mb-4">
+                    <h5>Complaints Over Time</h5>
+                    <img src="{{ url_for('static_file', filename='complaints_over_time.png') }}" alt="Complaints Over Time" class="img-fluid">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Churn Prediction with Reasons</h3>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for reason in churn_reasons %}
+                        <li class="list-group-item">{{ reason }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <form action="/classify" method="GET">
+                <input type="hidden" name="file_name" value="{{ file_name }}">
+                
+            </form>
+            <a href="/" class="btn btn-secondary">← Go Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

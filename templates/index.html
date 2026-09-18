@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Summarization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function toggleInputFields() {
+            const fileType = document.getElementById('file_type').value;
+            document.getElementById('textInput').style.display = fileType === 'text' ? 'block' : 'none';
+            document.getElementById('fileUpload').style.display = (fileType === 'document' || fileType === 'excel') ? 'block' : 'none';
+            document.getElementById('urlInput').style.display = fileType === 'url' ? 'block' : 'none';
+
+            // Add/Remove "+ Add More Files" button
+            const addMoreBtn = document.getElementById('addMoreBtn');
+            if (fileType === 'document') {
+                if (!addMoreBtn) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.id = 'addMoreBtn';
+                    btn.textContent = '+ Add More Files';
+                    btn.onclick = addFileInput;
+                    btn.style.marginTop = '5px';
+                    document.querySelector('.container').appendChild(btn);
+                }
+            } else {
+                if (addMoreBtn) {
+                    addMoreBtn.remove();
+                }
+            }
+
+            // Update accept types dynamically
+            const fileInputs = document.querySelectorAll('input[type="file"]');
+            fileInputs.forEach(input => {
+                input.accept = fileType === 'document' ? '.txt,.pdf,.docx' : '.xlsx,.xls,.csv';
+            });
+        }
+
+        function addFileInput() {
+            const fileContainer = document.getElementById('fileUpload');
+            const newInput = document.createElement('input');
+            newInput.type = 'file';
+            newInput.name = 'file_input';
+            newInput.style.display = 'block';
+            newInput.style.marginTop = '5px';
+            newInput.accept = document.getElementById('file_type').value === 'document' ? '.txt,.pdf,.docx' : '.xlsx,.xls,.csv';
+            fileContainer.appendChild(newInput);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("file_type").addEventListener("change", toggleInputFields);
+            // Start with all fields hidden
+            document.getElementById('textInput').style.display = 'none';
+            document.getElementById('fileUpload').style.display = 'none';
+            document.getElementById('urlInput').style.display = 'none';
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h3>Smart Summarization Tool</h3>
+        <form action="/process" method="POST" enctype="multipart/form-data">
+            <label for="file_type">Select Input Type:</label>
+            <select id="file_type" name="file_type">
+                <option value="" selected disabled>Select an option</option>
+                <option value="text">Enter Text</option>
+                <option value="document">Text/PDF/Word</option>
+                <option value="excel">Excel File</option>
+                <option value="url">URL</option>
+            </select>
+
+            <div id="textInput" style="display:none;">
+                <textarea name="text_area" placeholder="Enter text here..."></textarea>
+            </div>
+
+            <div id="fileUpload" style="display:none;">
+                <input type="file" name="file_input" accept=".txt,.pdf,.docx,.xlsx,.xls,.csv">
+            </div>
+
+            <div id="urlInput" style="display:none;">
+                <input type="text" name="url_text" placeholder="Enter URL">
+            </div>
+
+            <button type="submit">Proceed</button>
+        </form>
+
+        <div style="margin-top: 20px;">
+            <a href="javascript:location.reload()" class="back-btn">← Go Back</a>
+        </div>
+    </div>
+</body>
+</html>

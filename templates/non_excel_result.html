@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summarization Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    
+
+    
+</head>
+<body>
+    <div class="container">
+        <h3 class="page-title">Summarization Results</h3>
+        
+        {% if not results %}
+        <div class="error-message">No results were generated.</div>
+        {% else %}
+            {% for result in results %}
+            <div class="result-container">
+                {% if result.filename %}
+                <h4 class="file-title">File: {{ result.filename }}</h4>
+                {% else %}
+                <h4 class="file-title">Input Content</h4>
+                {% endif %}
+                
+                <div class="summary-box">
+                    <h5>Summary</h5>
+                    <p>{{ result.summary }}</p>
+                </div>
+                
+                {% if result.download_link %}
+                <a href="{{ result.download_link }}" class="download-btn">Download This Summary</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% endif %}
+        
+        <div class="back-container">
+            <a href="/" class="back-btn">← Go Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
